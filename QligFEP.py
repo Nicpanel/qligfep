@@ -332,7 +332,534 @@ class Run(object):
                 outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],
                                                         line[1],
                                                         line[2]))
+
+    def write_FEP1_3steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
+        lig_size1 = int(lig_size1)                                               
+        lig_size2 = int(lig_size2)                                               
+        lig_tot = lig_size1 + lig_size2                                          
+                                                                                 
+                                                                                 
+        with open(writedir + '/FEP1.fep', 'w') as outfile:                       
+            total_atoms = len(change_charges)                                    
+            outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
+            outfile.write('[FEP]\n')                                             
+            outfile.write('states 2\n')                                          
+            outfile.write('use_softcore_max_potential on\n\n')                   
+                                                                                 
+            # defining the atom order taken user given offset into account       
+            outfile.write('[atoms]\n')                                           
+            for i in range(1, total_atoms + 1):                                  
+                outfile.write("{:5}{:5}\n".format(str(i),                        
+                                                  str(i + self.atomoffset)))     
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing charges                                                   
+            outfile.write('[change_charges]\n')                                  
+                                                                                 
+            for line in change_charges:                                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(line[0],              
+                                                        line[1],                 
+                                                        line[1]))                
+            outfile.write('\n\n')                                                
+                                                                                 
+            #add the Q atomtypes                                                 
+            outfile.write('[atom_types]\n')                                      
+            for line in FEP_vdw:                                                 
+                outfile.write(line + '\n')                                       
+                                                                                 
+            outfile.write('DUM       0.0000    0.0000    0         0         0.0000    0.0000    1.0080')
+            outfile.write('\n\n')                                                
+                                                                                 
+            outfile.write('[softcore]\n')                                        
+            # ADD softcore                                                       
+            for i in range(1, lig_size1 + 1):                                    
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '20'))    
+                                                                                 
+            for i in range(1 + lig_size1, lig_tot + 1):                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '0'))    
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing atom types                                                
+            outfile.write('[change_atoms]\n')                                    
+            for line in change_vdw:                                              
+                outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],              
+                                                        line[1],                 
+                                                        line[1]))
+
+    def write_FEP2_3steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
+        lig_size1 = int(lig_size1)                                               
+        lig_size2 = int(lig_size2)                                               
+        lig_tot = lig_size1 + lig_size2                                          
+                                                                                 
+                                                                                 
+        with open(writedir + '/FEP2.fep', 'w') as outfile:                       
+            total_atoms = len(change_charges)                                    
+            outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
+            outfile.write('[FEP]\n')                                             
+            outfile.write('states 2\n')                                          
+            outfile.write('use_softcore_max_potential on\n\n')                   
+                                                                                 
+            # defining the atom order taken user given offset into account       
+            outfile.write('[atoms]\n')                                           
+            for i in range(1, total_atoms + 1):                                  
+                outfile.write("{:5}{:5}\n".format(str(i),                        
+                                                  str(i + self.atomoffset)))     
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing charges                                                   
+            outfile.write('[change_charges]\n')                                  
+                                                                                 
+            for line in change_charges:                                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(line[0],              
+                                                        line[1],                 
+                                                        line[2]))                
+            outfile.write('\n\n')                                                
+                                                                                 
+            #add the Q atomtypes                                                 
+            outfile.write('[atom_types]\n')                                      
+            for line in FEP_vdw:                                                 
+                outfile.write(line + '\n')                                       
+                                                                                 
+            outfile.write('DUM       0.0000    0.0000    0         0         0.0000    0.0000    1.0080')
+            outfile.write('\n\n')                                                
+                                                                                 
+            outfile.write('[softcore]\n')                                        
+            # ADD softcore                                                       
+            for i in range(1, lig_size1 + 1):                                    
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'20', '0'))    
+                                                                                 
+            for i in range(1 + lig_size1, lig_tot + 1):                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '20'))    
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing atom types                                                
+            outfile.write('[change_atoms]\n')                                    
+            for line in change_vdw:                                              
+                outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],              
+                                                        line[1],                 
+                                                        line[2]))
+
+    def write_FEP3_3steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
+        lig_size1 = int(lig_size1)                                               
+        lig_size2 = int(lig_size2)                                               
+        lig_tot = lig_size1 + lig_size2                                          
+                                                                                 
+                                                                                 
+        with open(writedir + '/FEP3.fep', 'w') as outfile:                       
+            total_atoms = len(change_charges)                                    
+            outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
+            outfile.write('[FEP]\n')                                             
+            outfile.write('states 2\n')                                          
+            outfile.write('use_softcore_max_potential on\n\n')                   
+                                                                                 
+            # defining the atom order taken user given offset into account       
+            outfile.write('[atoms]\n')                                           
+            for i in range(1, total_atoms + 1):                                  
+                outfile.write("{:5}{:5}\n".format(str(i),                        
+                                                  str(i + self.atomoffset)))     
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing charges                                                   
+            outfile.write('[change_charges]\n')                                  
+                                                                                 
+            for line in change_charges:                                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(line[0],              
+                                                        line[2],                 
+                                                        line[2]))                
+            outfile.write('\n\n')                                                
+                                                                                 
+            #add the Q atomtypes                                                 
+            outfile.write('[atom_types]\n')                                      
+            for line in FEP_vdw:                                                 
+                outfile.write(line + '\n')                                       
+                                                                                 
+            outfile.write('DUM       0.0000    0.0000    0         0         0.0000    0.0000    1.0080')
+            outfile.write('\n\n')                                                
+                                                                                 
+            outfile.write('[softcore]\n')                                        
+            # ADD softcore                                                       
+            for i in range(1, lig_size1 + 1):                                    
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '0'))    
+                                                                                 
+            for i in range(1 + lig_size1, lig_tot + 1):                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'20', '0'))    
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing atom types                                                
+            outfile.write('[change_atoms]\n')                                    
+            for line in change_vdw:                                              
+                outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],              
+                                                        line[2],                 
+                                                        line[2]))
+
             
+    def write_FEP1_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
+        lig_size1 = int(lig_size1)                                               
+        lig_size2 = int(lig_size2)                                               
+        lig_tot = lig_size1 + lig_size2                                          
+                                                                                 
+                                                                                 
+        with open(writedir + '/FEP1.fep', 'w') as outfile:                       
+            total_atoms = len(change_charges)                                    
+            outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
+            outfile.write('[FEP]\n')                                             
+            outfile.write('states 2\n')                                          
+            outfile.write('use_softcore_max_potential on\n\n')                   
+                                                                                 
+            # defining the atom order taken user given offset into account       
+            outfile.write('[atoms]\n')                                           
+            for i in range(1, total_atoms + 1):                                  
+                outfile.write("{:5}{:5}\n".format(str(i),                        
+                                                  str(i + self.atomoffset)))     
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing charges                                                   
+            outfile.write('[change_charges]\n')                                  
+
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_charges[i]                                             
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],              
+                                                            line[1],             
+                                                            line[1]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[1],             
+                                                            line[1]))
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            #add the Q atomtypes                                                 
+            outfile.write('[atom_types]\n')                                      
+            for line in FEP_vdw:                                                 
+                outfile.write(line + '\n')                                       
+                                                                                 
+            outfile.write('DUM       0.0000    0.0000    0         0         0.0000    0.0000    1.0080')
+            outfile.write('\n\n')                                                
+                                                                                 
+            outfile.write('[softcore]\n')                                        
+            # ADD softcore                                                       
+            for i in range(1, lig_size1 + 1):                                    
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '0'))    
+                                                                                 
+            for i in range(1 + lig_size1, lig_tot + 1):                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '20'))    
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing atom types                                                
+            outfile.write('[change_atoms]\n')                                    
+            for i in range(lig_size1+lig_size2):
+                line = change_vdw[i]
+                if i < lig_size1:                                              
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],              
+                                                            line[1],                 
+                                                            line[1]))                
+                else:
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],              
+                                                            line[1],             
+                                                            line[2]))
+
+            #Add excluding pairs:
+            outfile.write('[excluded_pairs]\n')
+            for i in range(1, lig_size1 + 1):
+                for j in range(1 + lig_size1, lig_tot + 1):
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+
+    def write_FEP2_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
+        lig_size1 = int(lig_size1)                                               
+        lig_size2 = int(lig_size2)                                               
+        lig_tot = lig_size1 + lig_size2                                          
+                                                                                 
+                                                                                 
+        with open(writedir + '/FEP2.fep', 'w') as outfile:                       
+            total_atoms = len(change_charges)                                    
+            outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
+            outfile.write('[FEP]\n')                                             
+            outfile.write('states 2\n')                                          
+            outfile.write('use_softcore_max_potential on\n\n')                   
+                                                                                 
+            # defining the atom order taken user given offset into account       
+            outfile.write('[atoms]\n')                                           
+            for i in range(1, total_atoms + 1):                                  
+                outfile.write("{:5}{:5}\n".format(str(i),                        
+                                                  str(i + self.atomoffset)))     
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing charges                                                   
+            outfile.write('[change_charges]\n')                                  
+                                                                                 
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_charges[i]                                         
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[1],             
+                                                            line[1]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[1],             
+                                                            line[1]))            
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            #add the Q atomtypes                                                 
+            outfile.write('[atom_types]\n')                                      
+            for line in FEP_vdw:                                                 
+                outfile.write(line + '\n')                                       
+                                                                                 
+            outfile.write('DUM       0.0000    0.0000    0         0         0.0000    0.0000    1.0080')
+            outfile.write('\n\n')                                                
+                                                                                 
+            outfile.write('[softcore]\n')                                        
+            # ADD softcore                                                       
+            for i in range(1, lig_size1 + 1):                                    
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '0'))     
+                                                                                 
+            for i in range(1 + lig_size1, lig_tot + 1):                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'20', '0'))    
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing atom types                                                
+            outfile.write('[change_atoms]\n')                                    
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_vdw[i]                                             
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],              
+                                                            line[1],             
+                                                            line[1]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[2],             
+                                                            line[2]))            
+
+            #Add excluding pairs:                                                
+            outfile.write('[excluded_pairs]\n')                                  
+            for i in range(1, lig_size1 + 1):                                    
+                for j in range(1 + lig_size1, lig_tot + 1):                      
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+
+    def write_FEP3_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
+        lig_size1 = int(lig_size1)                                               
+        lig_size2 = int(lig_size2)                                               
+        lig_tot = lig_size1 + lig_size2                                          
+                                                                                 
+                                                                                 
+        with open(writedir + '/FEP3.fep', 'w') as outfile:                       
+            total_atoms = len(change_charges)                                    
+            outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
+            outfile.write('[FEP]\n')                                             
+            outfile.write('states 2\n')                                          
+            outfile.write('use_softcore_max_potential on\n\n')                   
+                                                                                 
+            # defining the atom order taken user given offset into account       
+            outfile.write('[atoms]\n')                                           
+            for i in range(1, total_atoms + 1):                                  
+                outfile.write("{:5}{:5}\n".format(str(i),                        
+                                                  str(i + self.atomoffset)))     
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing charges                                                   
+            outfile.write('[change_charges]\n')                                  
+                                                                                 
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_charges[i]                                         
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[1],             
+                                                            line[2]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[1],             
+                                                            line[2]))            
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            #add the Q atomtypes                                                 
+            outfile.write('[atom_types]\n')                                      
+            for line in FEP_vdw:                                                 
+                outfile.write(line + '\n')                                       
+                                                                                 
+            outfile.write('DUM       0.0000    0.0000    0         0         0.0000    0.0000    1.0080')
+            outfile.write('\n\n')                                                
+                                                                                 
+            outfile.write('[softcore]\n')                                        
+            # ADD softcore                                                       
+            for i in range(1, lig_size1 + 1):                                    
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '0'))     
+                                                                                 
+            for i in range(1 + lig_size1, lig_tot + 1):                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '0'))    
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing atom types                                                
+            outfile.write('[change_atoms]\n')                                    
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_vdw[i]                                             
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[1],             
+                                                            line[1]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[2],             
+                                                            line[2]))
+
+            #Add excluding pairs:                                                
+            outfile.write('[excluded_pairs]\n')                                  
+            for i in range(1, lig_size1 + 1):                                    
+                for j in range(1 + lig_size1, lig_tot + 1):                      
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+
+    def write_FEP4_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
+        lig_size1 = int(lig_size1)                                               
+        lig_size2 = int(lig_size2)                                               
+        lig_tot = lig_size1 + lig_size2                                          
+                                                                                 
+                                                                                 
+        with open(writedir + '/FEP4.fep', 'w') as outfile:                       
+            total_atoms = len(change_charges)                                    
+            outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
+            outfile.write('[FEP]\n')                                             
+            outfile.write('states 2\n')                                          
+            outfile.write('use_softcore_max_potential on\n\n')                   
+                                                                                 
+            # defining the atom order taken user given offset into account       
+            outfile.write('[atoms]\n')                                           
+            for i in range(1, total_atoms + 1):                                  
+                outfile.write("{:5}{:5}\n".format(str(i),                        
+                                                  str(i + self.atomoffset)))     
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing charges                                                   
+            outfile.write('[change_charges]\n')                                  
+                                                                                 
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_charges[i]                                         
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[2],             
+                                                            line[2]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[2],             
+                                                            line[2]))            
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            #add the Q atomtypes                                                 
+            outfile.write('[atom_types]\n')                                      
+            for line in FEP_vdw:                                                 
+                outfile.write(line + '\n')                                       
+                                                                                 
+            outfile.write('DUM       0.0000    0.0000    0         0         0.0000    0.0000    1.0080')
+            outfile.write('\n\n')                                                
+                                                                                 
+            outfile.write('[softcore]\n')                                        
+            # ADD softcore                                                       
+            for i in range(1, lig_size1 + 1):                                    
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '20'))     
+                                                                                 
+            for i in range(1 + lig_size1, lig_tot + 1):                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '0'))     
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing atom types                                                
+            outfile.write('[change_atoms]\n')                                    
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_vdw[i]                                             
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[1],             
+                                                            line[1]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[2],             
+                                                            line[2])) 
+
+            #Add excluding pairs:                                                
+            outfile.write('[excluded_pairs]\n')                                  
+            for i in range(1, lig_size1 + 1):                                    
+                for j in range(1 + lig_size1, lig_tot + 1):                      
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+
+    def write_FEP5_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
+        lig_size1 = int(lig_size1)                                               
+        lig_size2 = int(lig_size2)                                               
+        lig_tot = lig_size1 + lig_size2                                          
+                                                                                 
+                                                                                 
+        with open(writedir + '/FEP5.fep', 'w') as outfile:                       
+            total_atoms = len(change_charges)                                    
+            outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
+            outfile.write('[FEP]\n')                                             
+            outfile.write('states 2\n')                                          
+            outfile.write('use_softcore_max_potential on\n\n')                   
+                                                                                 
+            # defining the atom order taken user given offset into account       
+            outfile.write('[atoms]\n')                                           
+            for i in range(1, total_atoms + 1):                                  
+                outfile.write("{:5}{:5}\n".format(str(i),                        
+                                                  str(i + self.atomoffset)))     
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing charges                                                   
+            outfile.write('[change_charges]\n')                                  
+                                                                                 
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_charges[i]                                         
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[2],             
+                                                            line[2]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[2],             
+                                                            line[2]))            
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            #add the Q atomtypes                                                 
+            outfile.write('[atom_types]\n')                                      
+            for line in FEP_vdw:                                                 
+                outfile.write(line + '\n')                                       
+                                                                                 
+            outfile.write('DUM       0.0000    0.0000    0         0         0.0000    0.0000    1.0080')
+            outfile.write('\n\n')                                                
+                                                                                 
+            outfile.write('[softcore]\n')                                        
+            # ADD softcore                                                       
+            for i in range(1, lig_size1 + 1):                                    
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'20', '0'))     
+                                                                                 
+            for i in range(1 + lig_size1, lig_tot + 1):                          
+                outfile.write("{:<5}{:>10}{:>10}\n".format(str(i),'0', '0'))     
+                                                                                 
+            outfile.write('\n\n')                                                
+                                                                                 
+            # changing atom types                                                
+            outfile.write('[change_atoms]\n')                                    
+            for i in range(lig_size1+lig_size2):                                 
+                line = change_vdw[i]                                             
+                if i < lig_size1:                                                
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[1],             
+                                                            line[2]))            
+                else:                                                            
+                    outfile.write('{:<5}{:>10}{:>10}\n'.format(line[0],          
+                                                            line[2],             
+                                                            line[2])) 
+
+            #Add excluding pairs:                                                
+            outfile.write('[excluded_pairs]\n')                                  
+            for i in range(1, lig_size1 + 1):                                    
+                for j in range(1 + lig_size1, lig_tot + 1):                      
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
             
     def merge_pdbs(self, writedir):
         replacements = {}
@@ -630,6 +1157,104 @@ class Run(object):
                 file_list_2.append(filename + '.inp')
 
         return [file_list_1, file_list_2, file_list_3]
+
+    def write_MD_1_Xsteps(self, lambdas, writedir, lig_size1, lig_size2, overlapping_atoms, step):
+        totallambda = len(lambdas)                                               
+        file_list_1 = []                                                         
+        file_list_2 = []                                                         
+        file_list_3 = []                                                         
+        replacements = {}                                                        
+        lig_total = lig_size1 + lig_size2                                        
+        lambda_1 = []                                                            
+        lambda_2 = []                                                            
+        prefix = 'FEP'+str(step)
+                                                                                 
+        replacements['ATOM_START_LIG1'] =   '{:<6}'.format(self.atomoffset + 1)  
+        replacements['ATOM_END_LIG1']   =   '{:<7}'.format(self.atomoffset + lig_size1)
+        replacements['ATOM_START_LIG2'] =   '{:<6}'.format(self.atomoffset + lig_size1 + 1)
+        replacements['ATOM_END_LIG2']   =   '{:<7}'.format(self.atomoffset + lig_size1 + lig_size2)
+        replacements['SPHERE']          =   self.sphereradius                    
+        replacements['ATOM_END']        =   '{:<6}'.format(self.atomoffset + lig_total)
+        replacements['EQ_LAMBDA']       =   '1.000 0.000'                        
+        replacements['FEP_VAR']         =   prefix + '.fep'
+        replacements['md_1000_0000']    =   prefix + '_md_1000_0000'
+        if step != 1:
+            replacements['eq5.re']      =   'FEP' + str(step - 1) + '_md_0000_1000.re'
+                                                                                 
+        if self.system == 'water' or self.system == 'vacuum':                    
+            replacements['WATER_RESTRAINT'] = '{:<7}{:<7} 1.0 0 1   '.format(self.atomoffset + 1,
+                                                                          self.atomoffset + lig_size1 +
+                                                                          lig_size2
+                                                                         )       
+                                                                                 
+                                                                                 
+        elif self.system == 'protein':                                           
+            replacements['WATER_RESTRAINT'] = ''                                 
+
+
+        #Prepare equilibration only for step 1                                                                                 
+        if step == 1:
+            for eq_file_in in sorted(glob.glob(s.ROOT_DIR + '/INPUTS/eq*.inp')):     
+                eq_file = eq_file_in.split('/')[-1:][0]                              
+                eq_file_out = writedir + '/' + eq_file                               
+                                                                                     
+                with open(eq_file_in) as infile, open(eq_file_out, 'w') as outfile:  
+                    for line in infile:                                              
+                        line = run.replace(line, replacements)                       
+                        outfile.write(line)                                          
+                        if line == '[distance_restraints]\n':                        
+                            for line in overlapping_atoms:                           
+                                outfile.write('{:d} {:d} 0.0 0.2 0.5 0\n'.format(line[0], line[1]))
+                                                                                     
+                    file_list_1.append(eq_file)                                      
+        
+        print(s.INPUT_DIR)                                                                         
+        file_in = s.INPUT_DIR + '/md_1000_0000.inp'                              
+        file_out = writedir + '/' + prefix +'_md_1000_0000.inp'                                
+        with open(file_in) as infile, open(file_out, 'w') as outfile:            
+            for line in infile:                                                  
+                line = run.replace(line, replacements)                           
+                outfile.write(line)                                              
+                if line == '[distance_restraints]\n':                            
+                    for line in overlapping_atoms:                               
+                        outfile.write('{:d} {:d} 0.0 0.2 0.5 0\n'.format(line[0], line[1]))
+                                                                                 
+        file_list_1.append(prefix +'_md_1000_0000.inp')                                   
+        filenr = 0                                                               
+                                                                                 
+        for l in lambdas:                                                        
+            if l == '1.000':                                                     
+                filename_N = prefix + '_md_1000_0000'                                      
+                continue                                                         
+            else:                                                                
+                step_n = totallambda - filenr - 2                                
+                                                                                 
+                lambda1 = l                                                      
+                lambda2 = lambdas[step_n]                                        
+                filename = prefix + '_md_' + lambda1.replace('.', '') + '_' + lambda2.replace('.', '')
+                replacements['FLOAT_LAMBDA1']   =   lambda1                      
+                replacements['FLOAT_LAMBDA2']   =   lambda2                      
+                replacements['FILE']          =   filename                       
+                replacements['FILE_N'] = filename_N                              
+                                                                                 
+                # Move to functio                                                
+                pattern = re.compile(r'\b(' + '|'.join(replacements.keys()) + r')\b')
+                file_in = s.INPUT_DIR + '/md_XXXX_XXXX.inp'                     
+                file_out = writedir + '/' + filename + '.inp'                    
+                                                                                 
+                with open(file_in) as infile, open(file_out, 'w') as outfile:    
+                    for line in infile:                                          
+                        line = pattern.sub(lambda x: replacements[x.group()], line)
+                        outfile.write(line)                                      
+                        if line == '[distance_restraints]\n':                    
+                            for line in overlapping_atoms:                       
+                                outfile.write('{:d} {:d} 0.0 0.2 0.5 0\n'.format(line[0], line[1]))
+                                                                                 
+                filename_N = filename                                            
+                filenr += 1                                                      
+                file_list_2.append(filename + '.inp')                            
+                                                                                 
+        return [file_list_1, file_list_2, file_list_3]
     
     def write_submitfile(self, writedir):
         replacements = {}
@@ -651,15 +1276,19 @@ class Run(object):
             print("WARNING: Could not change permission for " + submit_out)
 
         
-    def write_runfile(self, writedir, file_list):
+    def write_runfile_5steps(self, writedir, file_list):
         ntasks = getattr(s, self.cluster)['NTASKS']
         src = s.INPUT_DIR + '/run.sh'
         tgt = writedir + '/run' + self.cluster + '.sh'
         EQ_files = sorted(glob.glob(writedir + '/eq*.inp'))
+
+        print(file_list)
         
         if self.start == '1':
-            MD_files = reversed(sorted(glob.glob(writedir + '/md*.inp')))
-            
+            MD_files=[]
+            for i in range(1,6):
+                current_files = list(reversed(sorted(glob.glob(writedir + '/FEP' + str(i) + '*md*.inp'))))
+                MD_files = MD_files + current_files
         elif self.start == '0.5':
             md_1 = file_list[1]
             md_2 = file_list[2]
@@ -682,7 +1311,7 @@ class Run(object):
                 if line.strip() == '#EQ_FILES':
                     for line in EQ_files:
                         file_base = line.split('/')[-1][:-4]
-                        outline = 'time mpirun -np {} $qdyn {}.inp' \
+                        outline = 'time srun -n {} $qdyn {}.inp' \
                                    ' > {}.log\n'.format(ntasks,
                                                        file_base,
                                                        file_base)
@@ -692,25 +1321,25 @@ class Run(object):
                     if self.start == '1':
                         for line in MD_files:
                             file_base = line.split('/')[-1][:-4]
-                            outline = 'time mpirun -np {} $qdyn {}.inp'  \
+                            outline = 'time srun -n {} $qdyn {}.inp'  \
                                       ' > {}.log\n'.format(ntasks,
                                                            file_base,
                                                            file_base)
                             outfile.write(outline)
                             
                     elif self.start == '0.5':
-                        outline = 'time mpirun -np {} $qdyn {}.inp' \
+                        outline = 'time srun -n {} $qdyn {}.inp' \
                                    ' > {}.log\n\n'.format(ntasks,
                                                        'md_0500_0500',
                                                        'md_0500_0500')
                         outfile.write(outline)
                         for i, md in enumerate(md_1):
-                            outline1 = 'time mpirun -np {:d} $qdyn {}.inp'  \
+                            outline1 = 'time srun -n {:d} $qdyn {}.inp'  \
                                       ' > {}.log &\n'.format(int(int(ntasks)/2),
                                                            md_1[i][:-4],
                                                            md_1[i][:-4])
 
-                            outline2 = 'time mpirun -np {:d} $qdyn {}.inp'  \
+                            outline2 = 'time srun -n {:d} $qdyn {}.inp'  \
                                       ' > {}.log\n'.format(int(int(ntasks)/2),
                                                            md_2[i][:-4],
                                                            md_2[i][:-4])
@@ -842,7 +1471,7 @@ if __name__ == "__main__":
     
     parser.add_argument('-l', '--start',
                         dest = "start",
-                        default = '0.5',
+                        default = '1',
                         choices = ['1', '0.5'],
                         help = "Starting FEP in the middle or endpoint"
                        )
@@ -865,11 +1494,11 @@ if __name__ == "__main__":
                         choices = ['linear', 'sigmoidal', 'exponential', 'reverse_exponential'],
                         help = "Lambda spacing type to be used"
                        )
-    
+
     parser.add_argument('-w', '--windows',
                         dest = "windows",
-                        default = '50',
-                        help = "Total number of windows that will be run"
+                        default = "10,10,10,10,10",
+                        help = "List of total number of windows that will be run for each step",
                        )
     
     args = parser.parse_args()
@@ -895,28 +1524,69 @@ if __name__ == "__main__":
     change_vdw           = a[1][1]
     changes_for_pdbfiles = a[0][0]
     lig_size1, lig_size2 = a[2][0], a[2][1]
+    windows = args.windows.split(",")
 
     # Write the merged files
     run.change_lib(changes_for_libfiles, inputdir)
     FEP_vdw = run.change_prm(changes_for_prmfiles, inputdir)
-    run.write_FEP_file(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
-    run.merge_pdbs(inputdir)
-    if args.system == 'protein':
-        run.write_water_pdb(inputdir)
-    lambdas = run.get_lambdas(args.windows, args.sampling)
-    overlapping_atoms = run.overlapping_atoms(writedir)
-    
-    # Handling the correct offset here
-    if args.start == '0.5':
-        file_list = run.write_MD_05(lambdas, inputdir, lig_size1, lig_size2)
-        run.write_runfile(inputdir, file_list)    
+    #run.write_FEP_file(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+
+    #Run 5 steps FEP
+    if len(windows) == 5:
+        #Write FEP files for the 5 steps protocole
+        run.write_FEP1_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+        run.write_FEP2_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+        run.write_FEP3_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+        run.write_FEP4_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+        run.write_FEP5_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+
+        run.merge_pdbs(inputdir)
+        if args.system == 'protein':
+            run.write_water_pdb(inputdir)
+        #lambdas = run.get_lambdas(args.windows, args.sampling)
+        overlapping_atoms = run.overlapping_atoms(writedir)
         
-    if args.start == '1':
-        file_list = run.write_MD_1(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms)
-        run.write_runfile(inputdir, file_list)    
-    
-    run.write_submitfile(writedir)
-    run.write_qfep(inputdir, args.windows, lambdas)
-    run.write_qprep(inputdir)
-    run.qprep(inputdir)
-    
+        lambdas = run.get_lambdas(windows[0], args.sampling)
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 1)
+        lambdas = run.get_lambdas(windows[1], args.sampling)
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 2)
+        lambdas = run.get_lambdas(windows[2], args.sampling)
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 3)
+        lambdas = run.get_lambdas(windows[3], args.sampling)
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 4)
+        lambdas = run.get_lambdas(windows[4], args.sampling)
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 5)
+
+        run.write_runfile_5steps(inputdir, file_list)    
+        
+        run.write_submitfile(writedir)
+        run.write_qfep(inputdir, args.windows, lambdas)
+        run.write_qprep(inputdir)
+        run.qprep(inputdir)
+   
+        #Run 5 steps FEP                                                             
+    elif len(windows) == 3:                                                        
+        #Write FEP files for the 5 steps protocole                               
+        run.write_FEP1_3steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+        run.write_FEP2_3steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+        run.write_FEP3_3steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
+                                                                                 
+        run.merge_pdbs(inputdir)                                                 
+        if args.system == 'protein':                                             
+            run.write_water_pdb(inputdir)                                        
+        #lambdas = run.get_lambdas(args.windows, args.sampling)                  
+        overlapping_atoms = run.overlapping_atoms(writedir)                      
+                                                                                 
+        lambdas = run.get_lambdas(windows[0], args.sampling)                     
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 1)
+        lambdas = run.get_lambdas(windows[1], args.sampling)                     
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 2)
+        lambdas = run.get_lambdas(windows[2], args.sampling)                     
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 3)
+                                                                                 
+        run.write_runfile_5steps(inputdir, file_list)                            
+                                                                                 
+        run.write_submitfile(writedir)                                           
+        run.write_qfep(inputdir, args.windows, lambdas)                          
+        run.write_qprep(inputdir)                                                
+        run.qprep(inputdir) 
