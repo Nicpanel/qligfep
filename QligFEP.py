@@ -567,7 +567,7 @@ class Run(object):
             outfile.write('[excluded_pairs]\n')
             for i in range(1, lig_size1 + 1):
                 for j in range(1 + lig_size1, lig_tot + 1):
-                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i+self.atomoffset,j+self.atomoffset))
 
     def write_FEP2_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
         lig_size1 = int(lig_size1)                                               
@@ -640,7 +640,7 @@ class Run(object):
             outfile.write('[excluded_pairs]\n')                                  
             for i in range(1, lig_size1 + 1):                                    
                 for j in range(1 + lig_size1, lig_tot + 1):                      
-                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i+self.atomoffset,j+self.atomoffset))
 
     def write_FEP3_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
         lig_size1 = int(lig_size1)                                               
@@ -713,7 +713,7 @@ class Run(object):
             outfile.write('[excluded_pairs]\n')                                  
             for i in range(1, lig_size1 + 1):                                    
                 for j in range(1 + lig_size1, lig_tot + 1):                      
-                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i+self.atomoffset,j+self.atomoffset))
 
     def write_FEP4_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
         lig_size1 = int(lig_size1)                                               
@@ -786,7 +786,7 @@ class Run(object):
             outfile.write('[excluded_pairs]\n')                                  
             for i in range(1, lig_size1 + 1):                                    
                 for j in range(1 + lig_size1, lig_tot + 1):                      
-                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i+self.atomoffset,j+self.atomoffset))
 
     def write_FEP5_5steps(self, change_charges, change_vdw, FEP_vdw, writedir, lig_size1, lig_size2):
         lig_size1 = int(lig_size1)                                               
@@ -859,7 +859,7 @@ class Run(object):
             outfile.write('[excluded_pairs]\n')                                  
             for i in range(1, lig_size1 + 1):                                    
                 for j in range(1 + lig_size1, lig_tot + 1):                      
-                    outfile.write('{:<5}{:<5} 1 1\n'.format(i,j))
+                    outfile.write('{:<5}{:<5} 1 1\n'.format(i+self.atomoffset,j+self.atomoffset))
             
     def merge_pdbs(self, writedir):
         replacements = {}
