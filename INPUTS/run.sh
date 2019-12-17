@@ -36,10 +36,10 @@ rundir=$tempdir/$run
 mkdir -p $rundir
 cd $rundir
 
-cp $inputfiles/md*.inp .
+cp $inputfiles/FEP*md*.inp .
 cp $inputfiles/*.top .
 cp $inputfiles/qfep.inp .
-cp $inputfiles/$fepfile .
+cp $inputfiles/FEP*fep .
 cp $inputfiles/run_0500-1000.sh .
 cp $inputfiles/run_0500-0000.sh .
 

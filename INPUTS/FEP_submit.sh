@@ -7,7 +7,7 @@ workdir="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 inputfiles=$workdir/inputfiles
 submitfile=$inputfiles/RUNFILE
 
-sed -i s/finalMDrestart=.*/finalMDrestart="$restartfile"/g $submitfile
+#sed -i s/finalMDrestart=.*/finalMDrestart="$restartfile"/g $submitfile
 sed -i s#workdir=.*#workdir="$workdir"#g $submitfile
 sed -i s#inputfiles=.*#inputfiles="$inputfiles"#g $submitfile
 for temp in ${temperatures[*]};do
