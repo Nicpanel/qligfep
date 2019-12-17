@@ -1208,7 +1208,6 @@ class Run(object):
                                                                                      
                     file_list_1.append(eq_file)                                      
         
-        print(s.INPUT_DIR)                                                                         
         file_in = s.INPUT_DIR + '/md_1000_0000.inp'                              
         file_out = writedir + '/' + prefix +'_md_1000_0000.inp'                                
         with open(file_in) as infile, open(file_out, 'w') as outfile:            
@@ -1282,7 +1281,6 @@ class Run(object):
         tgt = writedir + '/run' + self.cluster + '.sh'
         EQ_files = sorted(glob.glob(writedir + '/eq*.inp'))
 
-        print(file_list)
         
         if self.start == '1':
             MD_files=[]
@@ -1311,7 +1309,7 @@ class Run(object):
                 if line.strip() == '#EQ_FILES':
                     for line in EQ_files:
                         file_base = line.split('/')[-1][:-4]
-                        outline = 'time srun -n {} $qdyn {}.inp' \
+                        outline = 'time mpirun -np {} $qdyn {}.inp' \
                                    ' > {}.log\n'.format(ntasks,
                                                        file_base,
                                                        file_base)
@@ -1321,31 +1319,101 @@ class Run(object):
                     if self.start == '1':
                         for line in MD_files:
                             file_base = line.split('/')[-1][:-4]
-                            outline = 'time srun -n {} $qdyn {}.inp'  \
+                            outline = 'time mpirun -np {} $qdyn {}.inp'  \
                                       ' > {}.log\n'.format(ntasks,
                                                            file_base,
                                                            file_base)
                             outfile.write(outline)
                             
                     elif self.start == '0.5':
-                        outline = 'time srun -n {} $qdyn {}.inp' \
+                        outline = 'time mpirun -np {} $qdyn {}.inp' \
                                    ' > {}.log\n\n'.format(ntasks,
                                                        'md_0500_0500',
                                                        'md_0500_0500')
                         outfile.write(outline)
                         for i, md in enumerate(md_1):
-                            outline1 = 'time srun -n {:d} $qdyn {}.inp'  \
+                            outline1 = 'time mpirun -np {:d} $qdyn {}.inp'  \
                                       ' > {}.log &\n'.format(int(int(ntasks)/2),
                                                            md_1[i][:-4],
                                                            md_1[i][:-4])
 
-                            outline2 = 'time srun -n {:d} $qdyn {}.inp'  \
+                            outline2 = 'time mpirun -np {:d} $qdyn {}.inp'  \
                                       ' > {}.log\n'.format(int(int(ntasks)/2),
                                                            md_2[i][:-4],
                                                            md_2[i][:-4])
 
                             outfile.write(outline1)
                             outfile.write(outline2)
+                            outfile.write('\n')
+
+    def write_runfile_3steps(self, writedir, file_list):                         
+        ntasks = getattr(s, self.cluster)['NTASKS']                              
+        src = s.INPUT_DIR + '/run.sh'                                            
+        tgt = writedir + '/run' + self.cluster + '.sh'                           
+        EQ_files = sorted(glob.glob(writedir + '/eq*.inp'))                      
+                                                                                 
+        if self.start == '1':                                                    
+            MD_files=[]                                                          
+            for i in range(1,4):                                                 
+                current_files = list(reversed(sorted(glob.glob(writedir + '/FEP' + str(i) + '*md*.inp'))))
+                MD_files = MD_files + current_files                              
+        elif self.start == '0.5':                                                
+            md_1 = file_list[1]                                                  
+            md_2 = file_list[2]                                                  
+                                                                                 
+        replacements = getattr(s, self.cluster)                                  
+        replacements['FEPS']='FEP1.fep'                                          
+        run_threads = '{}'.format(int(replacements['NTASKS']))                   
+                                                                                 
+        with open(src) as infile, open(tgt, 'w') as outfile:                     
+            for line in infile:                                                  
+                if line.strip() == '#SBATCH -A ACCOUNT':                         
+                    try:                                                         
+                        replacements['ACCOUNT']                                  
+                                                                                 
+                    except:                                                      
+                        line = ''                                                
+                outline = IO.replace(line, replacements)                         
+                outfile.write(outline)                                           
+                                                                                 
+                if line.strip() == '#EQ_FILES':                                  
+                    for line in EQ_files:                                        
+                        file_base = line.split('/')[-1][:-4]                     
+                        outline = 'time mpirun -np {} $qdyn {}.inp' \
+                                   ' > {}.log\n'.format(ntasks,                  
+                                                       file_base,                
+                                                       file_base)                
+                        outfile.write(outline)                                   
+                                                                                 
+                if line.strip() == '#RUN_FILES':                                 
+                    if self.start == '1':                                        
+                        for line in MD_files:                                    
+                            file_base = line.split('/')[-1][:-4]                 
+                            outline = 'time mpirun -np {} $qdyn {}.inp'  \
+                                      ' > {}.log\n'.format(ntasks,               
+                                                           file_base,            
+                                                           file_base)            
+                            outfile.write(outline)                               
+                                                                                 
+                    elif self.start == '0.5':                                    
+                        outline = 'time mpirun -np {} $qdyn {}.inp' \
+                                   ' > {}.log\n\n'.format(ntasks,                
+                                                       'md_0500_0500',           
+                                                       'md_0500_0500')           
+                        outfile.write(outline)                                   
+                        for i, md in enumerate(md_1):                            
+                            outline1 = 'time mpirun -np {:d} $qdyn {}.inp' \
+                                      ' > {}.log &\n'.format(int(int(ntasks)/2), 
+                                                           md_1[i][:-4],         
+                                                           md_1[i][:-4])         
+                                                                                 
+                            outline2 = 'time mpirun -np {:d} $qdyn {}.inp' \
+                                      ' > {}.log\n'.format(int(int(ntasks)/2),   
+                                                           md_2[i][:-4],         
+                                                           md_2[i][:-4])         
+                                                                                 
+                            outfile.write(outline1)                              
+                            outfile.write(outline2)                              
                             outfile.write('\n')
     
     def write_qfep(self, inputdir, windows, lambdas):
@@ -1472,7 +1540,7 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--start',
                         dest = "start",
                         default = '1',
-                        choices = ['1', '0.5'],
+                        choices = ['1'],
                         help = "Starting FEP in the middle or endpoint"
                        )
     
@@ -1584,7 +1652,7 @@ if __name__ == "__main__":
         lambdas = run.get_lambdas(windows[2], args.sampling)                     
         file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 3)
                                                                                  
-        run.write_runfile_5steps(inputdir, file_list)                            
+        run.write_runfile_3steps(inputdir, file_list)                            
                                                                                  
         run.write_submitfile(writedir)                                           
         run.write_qfep(inputdir, args.windows, lambdas)                          
