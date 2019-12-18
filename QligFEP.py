@@ -564,7 +564,7 @@ class Run(object):
                                                             line[2]))
 
             #Add excluding pairs:
-            outfile.write('[excluded_pairs]\n')
+            outfile.write('\n[excluded_pairs]\n')
             for i in range(1, lig_size1 + 1):
                 for j in range(1 + lig_size1, lig_tot + 1):
                     outfile.write('{:<5}{:<5} 1 1\n'.format(i+self.atomoffset,j+self.atomoffset))
@@ -1275,7 +1275,7 @@ class Run(object):
             print("WARNING: Could not change permission for " + submit_out)
 
         
-    def write_runfile_5steps(self, writedir, file_list):
+    def write_runfile_Xsteps(self, writedir, file_list, nsteps = 5):
         ntasks = getattr(s, self.cluster)['NTASKS']
         src = s.INPUT_DIR + '/run.sh'
         tgt = writedir + '/run' + self.cluster + '.sh'
@@ -1284,8 +1284,8 @@ class Run(object):
         
         if self.start == '1':
             MD_files=[]
-            for i in range(1,6):
-                current_files = list(reversed(sorted(glob.glob(writedir + '/FEP' + str(i) + '*md*.inp'))))
+            for i in range(nsteps):
+                current_files = list(reversed(sorted(glob.glob(writedir + '/FEP' + str(i+1) + '*md*.inp'))))
                 MD_files = MD_files + current_files
         elif self.start == '0.5':
             md_1 = file_list[1]
@@ -1416,9 +1416,9 @@ class Run(object):
                             outfile.write(outline2)                              
                             outfile.write('\n')
     
-    def write_qfep(self, inputdir, windows, lambdas):
+    def write_qfep(self, inputdir, windows, lambdas, step):
         qfep_in = s.ROOT_DIR + '/INPUTS/qfep.inp' 
-        qfep_out = writedir + '/inputfiles/qfep.inp'
+        qfep_out = writedir + '/inputfiles/qfep.FEP' + str(step) + '.inp'
         i = 0
         total_l = len(lambdas)
         
@@ -1438,7 +1438,8 @@ class Run(object):
                     j = -(i + 1)
                     lambda1 = lambdas[i]
                     lambda2 = lambdas[j]
-                    filename = 'md_' +                          \
+                    filename =  'FEP' + str(step) + "_" +       \
+                                'md_' +                         \
                                 lambda1.replace('.', '') +      \
                                 '_' +                           \
                                 lambda2.replace('.', '') +      \
@@ -1599,8 +1600,10 @@ if __name__ == "__main__":
     FEP_vdw = run.change_prm(changes_for_prmfiles, inputdir)
     #run.write_FEP_file(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
 
+    nsteps = len(windows)
+
     #Run 5 steps FEP
-    if len(windows) == 5:
+    if nsteps == 5:
         #Write FEP files for the 5 steps protocole
         run.write_FEP1_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
         run.write_FEP2_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
@@ -1608,53 +1611,26 @@ if __name__ == "__main__":
         run.write_FEP4_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
         run.write_FEP5_5steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
 
-        run.merge_pdbs(inputdir)
-        if args.system == 'protein':
-            run.write_water_pdb(inputdir)
-        #lambdas = run.get_lambdas(args.windows, args.sampling)
-        overlapping_atoms = run.overlapping_atoms(writedir)
-        
-        lambdas = run.get_lambdas(windows[0], args.sampling)
-        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 1)
-        lambdas = run.get_lambdas(windows[1], args.sampling)
-        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 2)
-        lambdas = run.get_lambdas(windows[2], args.sampling)
-        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 3)
-        lambdas = run.get_lambdas(windows[3], args.sampling)
-        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 4)
-        lambdas = run.get_lambdas(windows[4], args.sampling)
-        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 5)
-
-        run.write_runfile_5steps(inputdir, file_list)    
-        
-        run.write_submitfile(writedir)
-        run.write_qfep(inputdir, args.windows, lambdas)
-        run.write_qprep(inputdir)
-        run.qprep(inputdir)
-   
-        #Run 5 steps FEP                                                             
-    elif len(windows) == 3:                                                        
+    #Run 3 steps FEP                                                             
+    elif nsteps == 3:                                                        
         #Write FEP files for the 5 steps protocole                               
         run.write_FEP1_3steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
         run.write_FEP2_3steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
         run.write_FEP3_3steps(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
                                                                                  
-        run.merge_pdbs(inputdir)                                                 
-        if args.system == 'protein':                                             
-            run.write_water_pdb(inputdir)                                        
-        #lambdas = run.get_lambdas(args.windows, args.sampling)                  
-        overlapping_atoms = run.overlapping_atoms(writedir)                      
-                                                                                 
-        lambdas = run.get_lambdas(windows[0], args.sampling)                     
-        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 1)
-        lambdas = run.get_lambdas(windows[1], args.sampling)                     
-        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 2)
-        lambdas = run.get_lambdas(windows[2], args.sampling)                     
-        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = 3)
-                                                                                 
-        run.write_runfile_3steps(inputdir, file_list)                            
-                                                                                 
-        run.write_submitfile(writedir)                                           
-        run.write_qfep(inputdir, args.windows, lambdas)                          
-        run.write_qprep(inputdir)                                                
-        run.qprep(inputdir) 
+    run.merge_pdbs(inputdir)                                                 
+    if args.system == 'protein':                                             
+        run.write_water_pdb(inputdir)                                        
+    #lambdas = run.get_lambdas(args.windows, args.sampling)                  
+    overlapping_atoms = run.overlapping_atoms(writedir)                      
+                                                                            
+    for i in range(nsteps):                                                       
+        lambdas = run.get_lambdas(windows[i], args.sampling)                 
+        file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = i+1)
+        run.write_qfep(inputdir, args.windows[i], lambdas, step = i+1) 
+                                                                     
+    run.write_runfile_Xsteps(inputdir, file_list, nsteps)                            
+                                                                             
+    run.write_submitfile(writedir)                                           
+    run.write_qprep(inputdir)                                                
+    run.qprep(inputdir) 

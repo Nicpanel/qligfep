@@ -58,5 +58,7 @@ if [ $index -lt 1 ]; then
 #EQ_FILES
 fi
 #RUN_FILES
-timeout 30s QFEP < qfep.inp > qfep.out
+
+for fep in qfep.*.inp; do
+    timeout 30s QFEP < $fep > ${fep%.*}.out
 done
