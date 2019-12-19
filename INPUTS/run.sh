@@ -42,6 +42,7 @@ cp $inputfiles/qfep.inp .
 cp $inputfiles/FEP*fep .
 cp $inputfiles/run_0500-1000.sh .
 cp $inputfiles/run_0500-0000.sh .
+cp $inputfiles/qfep.*.inp .
 
 if [ $index -lt 1 ]; then
 cp $inputfiles/eq*.inp .
@@ -61,4 +62,5 @@ fi
 
 for fep in qfep.*.inp; do
     timeout 30s QFEP < $fep > ${fep%.*}.out
+done
 done
