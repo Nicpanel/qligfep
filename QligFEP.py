@@ -1627,7 +1627,7 @@ if __name__ == "__main__":
     for i in range(nsteps):                                                       
         lambdas = run.get_lambdas(windows[i], args.sampling)                 
         file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = i+1)
-        run.write_qfep(inputdir, args.windows[i], lambdas, step = i+1) 
+        run.write_qfep(inputdir, windows[i], lambdas, step = i+1) 
                                                                      
     run.write_runfile_Xsteps(inputdir, file_list, nsteps)                            
                                                                              
