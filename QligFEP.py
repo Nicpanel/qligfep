@@ -1561,7 +1561,7 @@ if __name__ == "__main__":
                         dest = "sampling",
                         default = 'linear',
                         choices = ['linear', 'sigmoidal', 'exponential', 'reverse_exponential'],
-                        help = "Lambda spacing type to be used"
+                        help = "Lambda spacing type to be used. The sampling method can be specified for each step."
                        )
 
     parser.add_argument('-w', '--windows',
@@ -1594,14 +1594,20 @@ if __name__ == "__main__":
     changes_for_pdbfiles = a[0][0]
     lig_size1, lig_size2 = a[2][0], a[2][1]
     windows = args.windows.split(",")
-
+    samplings = args.sampling.split(",")
+    
     # Write the merged files
     run.change_lib(changes_for_libfiles, inputdir)
     FEP_vdw = run.change_prm(changes_for_prmfiles, inputdir)
     #run.write_FEP_file(change_charges, change_vdw, FEP_vdw, inputdir, lig_size1, lig_size2)
 
     nsteps = len(windows)
-
+    #Apply same smapling method if only one is given
+    if len(samplings) == 1:
+        samplings = [args.sampling]*nsteps
+    elif len(samplings) != nsteps:
+        print("WARNING: Mismatch between steps number and sampling. %s used for all steps" % samplings[0])
+    
     #Run 5 steps FEP
     if nsteps == 5:
         #Write FEP files for the 5 steps protocole
@@ -1625,7 +1631,7 @@ if __name__ == "__main__":
     overlapping_atoms = run.overlapping_atoms(writedir)                      
                                                                             
     for i in range(nsteps):                                                       
-        lambdas = run.get_lambdas(windows[i], args.sampling)                 
+        lambdas = run.get_lambdas(windows[i], samplings[i])                 
         file_list = run.write_MD_1_Xsteps(lambdas, inputdir, lig_size1, lig_size2, overlapping_atoms, step = i+1)
         run.write_qfep(inputdir, windows[i], lambdas, step = i+1) 
                                                                      
