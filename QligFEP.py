@@ -290,7 +290,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')
             outfile.write('[FEP]\n')
             outfile.write('states 2\n')
-            outfile.write('use_softcore_max_potential on\n\n')
+            outfile.write('softcore_use_max_potential on\n\n')
 
             # defining the atom order taken user given offset into account
             outfile.write('[atoms]\n')
@@ -344,7 +344,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
             outfile.write('[FEP]\n')                                             
             outfile.write('states 2\n')                                          
-            outfile.write('use_softcore_max_potential on\n\n')                   
+            outfile.write('softcore_use_max_potential on\n\n')                   
                                                                                  
             # defining the atom order taken user given offset into account       
             outfile.write('[atoms]\n')                                           
@@ -398,7 +398,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
             outfile.write('[FEP]\n')                                             
             outfile.write('states 2\n')                                          
-            outfile.write('use_softcore_max_potential on\n\n')                   
+            outfile.write('softcore_use_max_potential on\n\n')                   
                                                                                  
             # defining the atom order taken user given offset into account       
             outfile.write('[atoms]\n')                                           
@@ -452,7 +452,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
             outfile.write('[FEP]\n')                                             
             outfile.write('states 2\n')                                          
-            outfile.write('use_softcore_max_potential on\n\n')                   
+            outfile.write('softcore_use_max_potential on\n\n')                   
                                                                                  
             # defining the atom order taken user given offset into account       
             outfile.write('[atoms]\n')                                           
@@ -507,7 +507,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
             outfile.write('[FEP]\n')                                             
             outfile.write('states 2\n')                                          
-            outfile.write('use_softcore_max_potential on\n\n')                   
+            outfile.write('softcore_use_max_potential on\n\n')                   
                                                                                  
             # defining the atom order taken user given offset into account       
             outfile.write('[atoms]\n')                                           
@@ -580,7 +580,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
             outfile.write('[FEP]\n')                                             
             outfile.write('states 2\n')                                          
-            outfile.write('use_softcore_max_potential on\n\n')                   
+            outfile.write('softcore_use_max_potential on\n\n')                   
                                                                                  
             # defining the atom order taken user given offset into account       
             outfile.write('[atoms]\n')                                           
@@ -653,7 +653,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
             outfile.write('[FEP]\n')                                             
             outfile.write('states 2\n')                                          
-            outfile.write('use_softcore_max_potential on\n\n')                   
+            outfile.write('softcore_use_max_potential on\n\n')                   
                                                                                  
             # defining the atom order taken user given offset into account       
             outfile.write('[atoms]\n')                                           
@@ -726,7 +726,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
             outfile.write('[FEP]\n')                                             
             outfile.write('states 2\n')                                          
-            outfile.write('use_softcore_max_potential on\n\n')                   
+            outfile.write('softcore_use_max_potential on\n\n')                   
                                                                                  
             # defining the atom order taken user given offset into account       
             outfile.write('[atoms]\n')                                           
@@ -799,7 +799,7 @@ class Run(object):
             outfile.write('!info: ' + self.lig1 + ' --> ' + self.lig2 + '\n')    
             outfile.write('[FEP]\n')                                             
             outfile.write('states 2\n')                                          
-            outfile.write('use_softcore_max_potential on\n\n')                   
+            outfile.write('softcore_use_max_potential on\n\n')                   
                                                                                  
             # defining the atom order taken user given offset into account       
             outfile.write('[atoms]\n')                                           
@@ -1607,6 +1607,7 @@ if __name__ == "__main__":
         samplings = [args.sampling]*nsteps
     elif len(samplings) != nsteps:
         print("WARNING: Mismatch between steps number and sampling. %s used for all steps" % samplings[0])
+        samplings = [samplings[0]]*nsteps
     
     #Run 5 steps FEP
     if nsteps == 5:
